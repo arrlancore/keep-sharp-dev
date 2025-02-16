@@ -1,15 +1,15 @@
 export const brand = {
-  title: "Brand",
-  domain: "ai",
+  title: "Exampractice",
+  domain: "com",
 };
-export const brandName = `${brand.title}.${brand.domain}`;
+export const brandName = `${brand.title}`;
 
 // app
 export const appSlogan = "Build Better, Ship Faster";
 export const appTitle = `${appSlogan} | ${brandName}`;
 export const appDescription =
   "The complete development platform for building and scaling your next project. Trusted by over 20,000 developers worldwide.";
-export const appUrl = "https://brand.ai";
+export const appUrl = "https://exampractice.com";
 export const appLocale = "en_US";
 
 // blog

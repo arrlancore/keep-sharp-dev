@@ -1,0 +1,50 @@
+{
+  "id": "google-ace-001",
+  "title": "Google Associate Cloud Engineer (ACE) Practice Exam",
+  "description": "This practice exam covers key concepts for the Google Associate Cloud Engineer certification.",
+  "prerequisites": ["Basic understanding of cloud computing", "Familiarity with Google Cloud Platform"],
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which Google Cloud service is best suited for running containerized applications?",
+      "type": "single",
+      "options": [
+        "Google Kubernetes Engine (GKE)",
+        "Compute Engine",
+        "App Engine",
+        "Cloud Functions"
+      ],
+      "correctAnswer": ["Google Kubernetes Engine (GKE)"],
+      "hint": "Think about services specifically designed for container orchestration.",
+      "explanation": "Google Kubernetes Engine (GKE) is a managed environment for deploying, managing, and scaling containerized applications using Google infrastructure. It's the best choice for running containerized applications on Google Cloud."
+    },
+    {
+      "id": 2,
+      "question": "Which of the following are valid ways to interact with Google Cloud Platform? (Select all that apply)",
+      "type": "multiple",
+      "options": [
+        "Google Cloud Console",
+        "gcloud CLI",
+        "REST API",
+        "Cloud Shell"
+      ],
+      "correctAnswer": ["Google Cloud Console", "gcloud CLI", "REST API", "Cloud Shell"],
+      "hint": "Consider both graphical and command-line interfaces, as well as programmatic access.",
+      "explanation": "Google Cloud Platform can be interacted with through multiple interfaces: the web-based Google Cloud Console, the command-line gcloud CLI, programmatically via REST APIs, and through Cloud Shell, which is an in-browser command-line interface."
+    },
+    {
+      "id": 3,
+      "question": "What is the purpose of a Virtual Private Cloud (VPC) in Google Cloud?",
+      "type": "single",
+      "options": [
+        "To provide a way to run virtual machines",
+        "To create an isolated network within Google Cloud",
+        "To manage user access and permissions",
+        "To store and retrieve object data"
+      ],
+      "correctAnswer": ["To create an isolated network within Google Cloud"],
+      "hint": "Think about network isolation and security in cloud environments.",
+      "explanation": "A Virtual Private Cloud (VPC) provides a way to create an isolated, private network within Google Cloud. It allows you to define your own IP address range, create subnets, and configure firewall rules, offering network-level isolation for your cloud resources."
+    }
+  ]
+}
