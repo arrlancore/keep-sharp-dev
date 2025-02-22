@@ -5,7 +5,7 @@ export interface Question {
   id: number;
   question: string | ReactElement;
   type: QuestionType;
-  options: string[] | ReactElement[];
+  options: string[];
   correctAnswer: string[];
   hint: string;
   explanation: string | ReactElement;

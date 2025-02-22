@@ -73,15 +73,6 @@ export const getExamById = async (examId: string) => {
         );
       }
 
-      if (question.options.length) {
-        const options = await Promise.all(
-          question.options.map(
-            async (option) => await convertMDToContent(option as string)
-          )
-        );
-        transformedQuestion.options = options;
-      }
-
       return transformedQuestion;
     })
   );

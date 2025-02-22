@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, ReactElement } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import {
   Card,
   CardContent,
@@ -470,7 +470,14 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
                       className="w-full justify-start text-left h-auto py-3 px-4 whitespace-normal"
                       onClick={() => handleAnswerSelect(option)}
                     >
-                      <span className="break-words">{option}</span>
+                      <span className="break-words whitespace-pre-wrap">
+                        {option.split("\n").map((line, index) => (
+                          <React.Fragment key={index}>
+                            {line}
+                            {index < option.split("\n").length - 1 && <br />}
+                          </React.Fragment>
+                        ))}
+                      </span>
                     </Button>
                   )
                 )}

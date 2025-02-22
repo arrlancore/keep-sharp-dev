@@ -4,16 +4,46 @@
 
   <url>
     <loc>https://brand.ai</loc>
-    <lastmod>2024-11-24T03:04:43.841Z</lastmod>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://brand.ai/blog</loc>
-    <lastmod>2024-11-24T03:04:43.842Z</lastmod>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://brand.ai/exams</loc>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://brand.ai/exam/[examId]</loc>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://brand.ai/exam/[examId]/practices</loc>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Author Pages -->
+
+  <url>
+    <loc>https://brand.ai/authors/tim-redaksi</loc>
+    <lastmod>2025-02-22T14:14:13.002Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
   <!-- Blog Posts -->
