@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import {
   Card,
   CardContent,
@@ -71,7 +71,6 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     examId: exam.id,
   });
   const [isNewQuiz, setIsNewQuiz] = useState<boolean>(false);
-
   const router = useRouter();
 
   const loadHistory = (examId: string) => {
@@ -468,10 +467,10 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
                             : "default"
                           : "outline"
                       }
-                      className="w-full justify-start text-left h-auto py-3 px-4"
+                      className="w-full justify-start text-left h-auto py-3 px-4 whitespace-normal"
                       onClick={() => handleAnswerSelect(option)}
                     >
-                      {option}
+                      <span className="break-words">{option}</span>
                     </Button>
                   )
                 )}
@@ -538,9 +537,13 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
               <AlertDialogTitle className="text-xl font-bold">
                 Explanation
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-base mt-2">
-                {shuffledQuestions[currentQuestion]?.explanation ||
-                  "No explanation available"}
+              <AlertDialogDescription className="mt-2">
+                <div className="prose prose-sm dark:prose-invert max-h-[320px] max-w-full overflow-auto">
+                  <div className="whitespace-pre-wrap break-words">
+                    {shuffledQuestions[currentQuestion]?.explanation ||
+                      "No explanation available"}
+                  </div>
+                </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

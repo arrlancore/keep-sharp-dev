@@ -47,7 +47,6 @@ export async function generateMetadata({
 
 export default async function ExamOverviewPage({ params }: PageProps) {
   const exam = await getExamById(params.examId); // ReplacePageProps) {ctual exam ID
-
   return (
     <div className="max-w-screen-xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <BlogHeader />

@@ -1,12 +1,14 @@
+import { ReactElement } from "react";
+
 export type QuestionType = "single" | "multiple";
 export interface Question {
   id: number;
-  question: string;
+  question: string | ReactElement;
   type: QuestionType;
-  options: string[];
+  options: string[] | ReactElement[];
   correctAnswer: string[];
   hint: string;
-  explanation: string;
+  explanation: string | ReactElement;
 }
 
 export interface ExamPractice {
