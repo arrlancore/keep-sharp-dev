@@ -1,0 +1,54 @@
+{
+  "id": "example-practice",
+  "title": "Example Practice Exam",
+  "description": "This practice exam covers key concepts for the Google Associate Cloud Engineer certification.",
+  "prerequisites": [
+    "Basic understanding of cloud computing",
+    "Familiarity with Google Cloud Platform"
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "question": "Every employee of your company has a Google account. Your operational team needs to manage a large number of instances on Compute Engine. Each member of this team needs only administrative access to the servers. Your security team wants to ensure that the deployment of credentials is operationally efficient and must be able to determine who accessed a given instance. What should you do?",
+      "type": "single",
+      "options": [
+        "Generate a new SSH key pair. Give the private key to each member of your team. Configure the public key in the metadata of each instance.",
+        "Ask each member of the team to generate a new SSH key pair and to send you their public key. Use a configuration management tool to deploy those keys on each instance.",
+        "Ask each member of the team to generate a new SSH key pair and to add the public key to their Google account. Grant the 'compute.osAdminLogin' role to the Google group corresponding to this team.",
+        "Generate a new SSH key pair. Give the private key to each member of your team. Configure the public key as a project-wide public SSH key in your Cloud Platform project and allow project-wide public SSH keys on each instance."
+      ],
+      "correctAnswer": [
+        "Ask each member of the team to generate a new SSH key pair and to add the public key to their Google account. Grant the 'compute.osAdminLogin' role to the Google group corresponding to this team."
+      ],
+      "hint": "Think about security best practices, individual accountability, and OS Login features in Google Cloud.",
+      "explanation": "### Key Concept\nOS Login with IAM is Google Cloud's recommended way to manage SSH access to instances.\n\n### Real-world Example\nImagine a company with 50 engineers needing server access:\n- *Without OS Login*: Admin manually manages 50 SSH keys across hundreds of servers\n- *With OS Login*: Engineers simply add their SSH key to their Google account, and admin assigns one IAM role\n\n### Why it Works\n- Each person uses their own key → tracks who did what\n- IAM role controls access → easy to add/remove people\n- Automatic user management → no manual server updates\n\n🔗 Learn more: [OS Login Official Documentation](https://cloud.google.com/compute/docs/oslogin)"
+    },
+    {
+      "id": 2,
+      "question": "You need to create a custom VPC with a single subnet. The subnet's range must be as large as possible. Which range should you use?",
+      "type": "single",
+      "options": ["0.0.0.0/0", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
+      "correctAnswer": ["10.0.0.0/8"],
+      "hint": "Consider the RFC1918 private IP address ranges and their network sizes",
+      "explanation": "### Key Concept\nWhen creating VPC subnets, you must use private IP ranges defined in RFC1918, with the size determined by the CIDR notation (/8, /12, /16 etc).\n\n### Real-world Example\nComparing the available IP addresses in each range:\n- 10.0.0.0/8: ~16.7 million addresses\n- 172.16.0.0/12: ~1 million addresses\n- 192.168.0.0/16: ~65,000 addresses\n\n### Why 10.0.0.0/8 is Correct\n- Largest private range available\n- Safe for internal use - won't conflict with internet routing\n- 0.0.0.0/0 is invalid as it represents all IPv4 addresses\n\n🔗 Learn more: [VPC Network Overview](https://cloud.google.com/vpc/docs/vpc)"
+    },
+    {
+      "id": 119,
+      "question": "Your company implemented BigQuery as an enterprise data warehouse. Users from multiple business units run queries on this data warehouse. However, you notice that query costs for BigQuery are very high, and you need to control costs. Which two methods should you use? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "Split the users from business units to multiple projects.",
+        "Apply a user- or project-level custom query quota for BigQuery data warehouse.",
+        "Create separate copies of your BigQuery data warehouse for each business unit.",
+        "Split your BigQuery data warehouse into multiple data warehouses for each business unit.",
+        "Change your BigQuery query model from on-demand to flat rate. Apply the appropriate number of slots to each Project."
+      ],
+      "correctAnswer": [
+        "Apply a user- or project-level custom query quota for BigQuery data warehouse.",
+        "Change your BigQuery query model from on-demand to flat rate. Apply the appropriate number of slots to each Project."
+      ],
+      "hint": "Consider cost control strategies relevant to data warehousing in GCP.",
+      "explanation": "### Why Use Custom Query Quotas and Flat Rate?\n\n#### Cost Management\nSetting quotas on queries helps prevent overuse and high costs by controlling how much each user or project can consume.\nSwitching to a flat-rate model helps control costs more predictably by allocating a set number of slots for parallel processing of queries, making it easier to budget spending.\n\n### Summary of Wrong Options:\n\n**Option 1: Split Users by Projects**\n- ❌ This does not address the cost problem and might complicate data access for business units.\n\n**Option 3: Creating Separate Copies**\n- ❌ This would increase storage costs significantly.\n\n**Option 4: Splitting Data Warehouses**\n- ❌ Similar to option 3, which does not effectively deal with cost issues.\n\n🔗 [Reference: Managing BigQuery Costs](https://cloud.google.com/bigquery/docs/how-to-manage-costs)"
+    }
+  ]
+}

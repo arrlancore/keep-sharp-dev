@@ -8,7 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ExamPractice, Question, QuizAttempt } from "@/types/exam";
+import {
+  ExamPractice,
+  Question,
+  QuizAttempt,
+  QuizProgress,
+} from "@/types/exam";
 import {
   Table,
   TableBody,
@@ -71,6 +76,9 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     examId: exam.id,
   });
   const [isNewQuiz, setIsNewQuiz] = useState<boolean>(false);
+  const [quizProgress, setQuizProgress] = useState<QuizProgress | null>(null);
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
+
   const router = useRouter();
 
   const loadHistory = (examId: string) => {
@@ -91,13 +99,55 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     }
   };
 
+  // Add these utility functions at the top of the file, after the imports
+
+  const saveQuizProgress = (examId: string, progress: QuizProgress) => {
+    try {
+      localStorage.setItem(`quizProgress-${examId}`, JSON.stringify(progress));
+    } catch (error) {
+      console.error(`Error saving quiz progress for exam ${examId}:`, error);
+    }
+  };
+
+  const loadQuizProgress = (examId: string): QuizProgress | null => {
+    try {
+      const savedProgress = localStorage.getItem(`quizProgress-${examId}`);
+      return savedProgress ? JSON.parse(savedProgress) : null;
+    } catch (error) {
+      console.error(`Error loading quiz progress for exam ${examId}:`, error);
+      return null;
+    }
+  };
+
+  const clearQuizProgress = (examId: string) => {
+    try {
+      localStorage.removeItem(`quizProgress-${examId}`);
+    } catch (error) {
+      console.error(`Error clearing quiz progress for exam ${examId}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    const history = loadHistory(exam.id);
+    setQuizHistory(history);
+
+    const savedProgress = loadQuizProgress(exam.id);
+    if (savedProgress && savedProgress.currentAttempt.score > 0) {
+      setQuizProgress(savedProgress);
+      setShowResumeDialog(true);
+    } else {
+      initializeQuiz();
+    }
+    setIsLoading(false);
+  }, [exam.id]);
+
   const initializeQuiz = () => {
     const shuffled = exam.questions.map((q) => ({
       ...q,
       options: shuffleArray([...q.options]),
     }));
     setShuffledQuestions(shuffled);
-    setCurrentAttempt({
+    const newAttempt = {
       answers: Array(shuffled.length).fill([]),
       hintsUsed: Array(shuffled.length).fill(false),
       explanationsUsed: Array(shuffled.length).fill(false),
@@ -105,15 +155,43 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
       examId: exam.id,
       score: 0,
       totalQuestions: shuffled.length,
+    };
+    setCurrentAttempt(newAttempt);
+    setQuizProgress({
+      currentQuestionIndex: 0,
+      currentAttempt: newAttempt,
+    });
+    saveQuizProgress(exam.id, {
+      currentQuestionIndex: 0,
+      currentAttempt: newAttempt,
     });
   };
 
-  useEffect(() => {
-    const history = loadHistory(exam.id);
-    setQuizHistory(history);
-    initializeQuiz();
-    setIsLoading(false);
-  }, [exam.id]); // Add exam.id as a dependency
+  const handleResumeQuiz = () => {
+    if (quizProgress) {
+      setCurrentQuestion(quizProgress.currentQuestionIndex);
+      setCurrentAttempt(quizProgress.currentAttempt);
+      setSelectedAnswers(
+        quizProgress.currentAttempt.answers[
+          quizProgress.currentQuestionIndex
+        ] || []
+      );
+      setScore(quizProgress.currentAttempt.score);
+      setSubmitted(
+        Boolean(
+          quizProgress.currentAttempt.answers[
+            quizProgress.currentQuestionIndex
+          ][0]
+        )
+      );
+      const shuffled = exam.questions.map((q) => ({
+        ...q,
+        options: shuffleArray([...q.options]),
+      }));
+      setShuffledQuestions(shuffled);
+    }
+    setShowResumeDialog(false);
+  };
 
   const handleAnswerSelect = (option: string) => {
     if (!submitted && shuffledQuestions[currentQuestion]) {
@@ -165,23 +243,34 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
       ? currentAttempt.score + 1
       : currentAttempt.score;
 
-    setCurrentAttempt((prev) => ({
-      ...prev,
+    const updatedAttempt = {
+      ...currentAttempt,
       answers: newAnswers,
       score: newScore,
       totalQuestions: shuffledQuestions.length,
-    }));
+    };
+    setCurrentAttempt(updatedAttempt);
+    saveQuizProgress(exam.id, {
+      currentQuestionIndex: currentQuestion,
+      currentAttempt: updatedAttempt,
+    });
 
     setScore(newScore);
   };
 
   const handleNext = () => {
     if (currentQuestion < shuffledQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      const nextQuestion = currentQuestion + 1;
+
+      setCurrentQuestion(nextQuestion);
       setSelectedAnswers([]);
       setSubmitted(false);
       setShowHint(false);
       setShowExplanation(false);
+      saveQuizProgress(exam.id, {
+        currentQuestionIndex: nextQuestion,
+        currentAttempt: currentAttempt,
+      });
     } else {
       // Update the final score and show results
       const finalAttempt = {
@@ -196,10 +285,12 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
       const updatedHistory = [...quizHistory, finalAttempt];
       setQuizHistory(updatedHistory);
       saveHistory(exam.id, updatedHistory);
+      clearQuizProgress(exam.id);
     }
   };
 
   const resetQuiz = () => {
+    clearQuizProgress(exam.id);
     setIsNewQuiz(true);
     setCurrentQuestion(0);
     setSelectedAnswers([]);
@@ -209,15 +300,7 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     setScore(0);
     setShowResults(false);
     setShowHistory(false);
-    setCurrentAttempt({
-      answers: [],
-      hintsUsed: [],
-      explanationsUsed: [],
-      timestamp: new Date().toISOString(),
-      score: 0,
-      totalQuestions: shuffledQuestions.length,
-      examId: exam.id,
-    });
+    initializeQuiz();
   };
 
   const getScore = (correct: number, totalQuestions: number) =>
@@ -379,13 +462,37 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
           <h1 className="text-3xl font-bold mb-6">Welcome Back!</h1>
           <Card>
             <CardHeader>
-              <CardTitle>Resume Your Practice</CardTitle>
-              <CardDescription>
-                You have previous quiz attempts. What would you like to do?
-              </CardDescription>
+              <CardTitle>
+                {showResumeDialog ? "Resume" : "Make"} Your Practice
+              </CardTitle>
+              {showResumeDialog && (
+                <CardDescription>
+                  You have previous quiz attempts. What would you like to do?
+                </CardDescription>
+              )}
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
+                {showResumeDialog && (
+                  <Card className="p-4">
+                    <h3 className="font-semibold mb-2">Continue</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Resume your previous quiz attempt.
+                    </p>
+                    <Button className="w-full" onClick={handleResumeQuiz}>
+                      Continue
+                    </Button>
+                  </Card>
+                )}
+                <Card className="p-4">
+                  <h3 className="font-semibold mb-2">New Quiz</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Start a fresh quiz to test your knowledge.
+                  </p>
+                  <Button className="w-full" onClick={resetQuiz}>
+                    Start New Quiz
+                  </Button>
+                </Card>
                 <Card className="p-4">
                   <h3 className="font-semibold mb-2">Previous Attempts</h3>
                   <p className="text-sm text-muted-foreground mb-4">
@@ -397,15 +504,6 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
                     onClick={() => setShowHistory(true)}
                   >
                     View History
-                  </Button>
-                </Card>
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">New Quiz</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Start a fresh quiz to test your knowledge.
-                  </p>
-                  <Button className="w-full" onClick={resetQuiz}>
-                    Start New Quiz
                   </Button>
                 </Card>
               </div>
