@@ -11,4 +11,4 @@ Disallow: */?*
 Allow: /images/
 Allow: /assets/
 
-Sitemap: https://brand.ai/sitemap.xml
+Sitemap: https://keepsharp.dev/sitemap.xml

@@ -1,6 +1,6 @@
 export const brand = {
-  title: "Exampractice",
-  domain: "com",
+  title: "Keepsharp",
+  domain: "dev",
 };
 export const brandName = `${brand.title}`;
 
@@ -9,7 +9,7 @@ export const appSlogan = "Build Better, Ship Faster";
 export const appTitle = `${appSlogan} | ${brandName}`;
 export const appDescription =
   "The complete development platform for building and scaling your next project. Trusted by over 20,000 developers worldwide.";
-export const appUrl = "https://exampractice.com";
+export const appUrl = "https://keepsharp.dev";
 export const appLocale = "en_US";
 
 // blog

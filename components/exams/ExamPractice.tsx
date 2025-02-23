@@ -135,6 +135,7 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     if (savedProgress && savedProgress.currentAttempt.score > 0) {
       setQuizProgress(savedProgress);
       setShowResumeDialog(true);
+      setIsNewQuiz(false);
     } else {
       initializeQuiz();
     }
@@ -450,12 +451,7 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
     );
   }
 
-  if (
-    quizHistory.length > 0 &&
-    currentQuestion === 0 &&
-    !submitted &&
-    !isNewQuiz
-  ) {
+  if (showResumeDialog || (quizHistory.length > 0 && !isNewQuiz)) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
@@ -493,19 +489,21 @@ function ExamPracticeApp({ exam }: { exam: ExamPractice }) {
                     Start New Quiz
                   </Button>
                 </Card>
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">Previous Attempts</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Review your past performance and track your progress.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setShowHistory(true)}
-                  >
-                    View History
-                  </Button>
-                </Card>
+                {quizHistory.length > 0 && (
+                  <Card className="p-4">
+                    <h3 className="font-semibold mb-2">Previous Attempts</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Review your past performance and track your progress.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setShowHistory(true)}
+                    >
+                      View History
+                    </Button>
+                  </Card>
+                )}
               </div>
             </CardContent>
             <CardFooter>
